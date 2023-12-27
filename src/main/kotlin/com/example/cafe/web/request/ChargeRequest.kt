@@ -1,4 +1,8 @@
 package com.example.cafe.web.request
 
-class ChargeRequest {
-}
+import jakarta.validation.constraints.NotNull
+
+data class ChargeRequest(
+    @field:NotNull
+    var chargePoint: Long
+)

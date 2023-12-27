@@ -1,10 +1,21 @@
 package com.example.cafe.web.request
 
+import com.example.cafe.domain.enums.Category
+import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull
 
-data class ProductBuyRequest(
+data class ProductCreateRequest(
+    @field:NotBlank
+    val name: String,
+
     @field:NotNull
-    var productId: Long,
+    val category: Category,
+
+    var description: String,
+
     @field:NotNull
-    var amount: Long,
+    val price: Long,
+
+    @field:NotNull
+    val amount: Long
 )

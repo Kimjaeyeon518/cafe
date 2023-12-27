@@ -1,4 +1,4 @@
-package com.jyk.qrorder.domain.valueobject
+package com.example.cafe.domain.entity.valueobject
 
 import jakarta.persistence.Column
 import jakarta.persistence.Embeddable

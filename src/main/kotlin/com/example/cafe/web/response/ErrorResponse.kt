@@ -1,5 +1,6 @@
 package com.example.board.web.response
 
+import com.example.cafe.web.response.ApiResponseCode
 import lombok.Getter
 import lombok.Setter
 

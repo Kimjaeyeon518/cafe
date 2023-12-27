@@ -1,8 +1,8 @@
-package com.example.cafe.domain
+package com.example.cafe.web.request
 
 import jakarta.validation.constraints.NotNull
 
-data class OrderLineDto(
+data class OrderLineRequest(
     @field:NotNull
     var productId: Long,
     @field:NotNull

@@ -1,10 +1,15 @@
-package com.jyk.qrorder.domain.entity
+package com.example.cafe.domain.entity
 
+import com.example.cafe.domain.entity.Order
 import jakarta.persistence.*
 
 @Entity
 @Table(name = "order_line")
-class OrderLine(order: Order, productName: String, productAmount: Long, productPrice: Long) {
+class OrderLine(order: Order, product: Product, amount: Long) {
+
+    init {
+        order.addOrderline(this)
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -12,14 +17,12 @@ class OrderLine(order: Order, productName: String, productAmount: Long, productP
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
     @JoinColumn(name = "order_id", nullable = false)
-    var order = order
+    var order: Order = order
 
-    @Column(name = "product_name")
-    var productName = productName
+    @ManyToOne(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
+    @JoinColumn(name = "product_id", nullable = false)
+    var product = product
 
-    @Column(name = "product_amount")
-    var productAmount = productAmount
-
-    @Column(name = "product_price")
-    var productPrice = productPrice
+    @Column(name = "amount")
+    var amount = amount
 }

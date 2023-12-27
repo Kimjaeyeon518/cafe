@@ -1,7 +1,7 @@
-package com.example.board.exception
+package com.example.cafe.exception
 
-import com.example.board.web.response.ApiResponseCode
-import org.springframework.http.HttpStatus
+import com.example.board.exception.BaseException
+import com.example.cafe.web.response.ApiResponseCode
 
 class BadRequestException(message: String): BaseException() {
     override var code: ApiResponseCode = ApiResponseCode.BAD_REQUEST

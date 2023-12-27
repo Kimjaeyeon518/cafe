@@ -1,11 +1,11 @@
-package com.jyk.qrorder.domain.entity
+package com.example.cafe.domain.entity
 
-import com.jyk.qrorder.domain.enums.OrderStatus
+import com.example.cafe.domain.entity.common.BaseTimeEntity
 import jakarta.persistence.*
 
 @Entity
-@Table(name = "order")
-class Order(shopId: Long, tableId: Long, status: OrderStatus, totalPrice: Long) {
+@Table(name = "orders")
+class Order(totalPrice: Long): BaseTimeEntity() {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -14,16 +14,10 @@ class Order(shopId: Long, tableId: Long, status: OrderStatus, totalPrice: Long) 
     @OneToMany(mappedBy = "order", cascade = [CascadeType.ALL], orphanRemoval = true)
     var orderLines: MutableList<OrderLine> = ArrayList()
 
-    @Column(name = "shop_id")
-    var shopId = shopId
-
-    @Column(name = "table_id")
-    var tableId = tableId
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status")
-    var status = status
-
     @Column(name = "total_price")
     var totalPrice = totalPrice
+
+    fun addOrderline(orderLine: OrderLine) {
+        this.orderLines.add(orderLine)
+    }
 }

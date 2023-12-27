@@ -1,4 +1,4 @@
-package com.jyk.qrorder.domain.enums
+package com.example.cafe.domain.enums
 
 enum class OrderStatus(value: String) {
     CANCEL("주문취소"),
