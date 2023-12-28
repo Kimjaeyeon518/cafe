@@ -2,9 +2,12 @@ package com.example.cafe.api
 
 import com.example.board.web.response.ListResponse
 import com.example.board.web.response.SingleResponse
+import com.example.cafe.domain.entity.Order
 import com.example.cafe.domain.entity.Product
 import com.example.cafe.domain.enums.Category
+import com.example.cafe.service.OrderService
 import com.example.cafe.service.ProductService
+import com.example.cafe.service.UserService
 import com.example.cafe.web.request.BuyRequest
 import com.example.cafe.web.request.ProductCreateRequest
 import jakarta.validation.Valid
@@ -20,17 +23,21 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-class ProductApi(val productService: ProductService) {
+class ProductApi(
+    val userService: UserService,
+    val productService: ProductService,
+    val orderService: OrderService
+) {
 
     @PostMapping("/products/buy")
     fun buy(
         @AuthenticationPrincipal user: User,
         @Valid @RequestBody request: BuyRequest
-    ): ResponseEntity<SingleResponse<String>> {
-        productService.buy(user.username.toLong(), request)
+    ): ResponseEntity<SingleResponse<Order>> {
+        val order = productService.buy(user.username.toLong(), request)
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(SingleResponse.successOf("구매 완료 !"))
+            .body(SingleResponse.successOf("주문 완료 !", order))
     }
 
     @PostMapping("/products")

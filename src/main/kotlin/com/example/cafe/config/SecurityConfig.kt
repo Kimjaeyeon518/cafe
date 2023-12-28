@@ -19,7 +19,8 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 @EnableMethodSecurity
 class SecurityConfig(
     private val jwtExceptionFilter: JwtExceptionFilter,
-    private val jwtPlugin: JwtPlugin
+    private val jwtPlugin: JwtPlugin,
+    private val entryPoint: CustomAuthenticationEntryPoint
 ) {
 
     @Bean
@@ -35,6 +36,7 @@ class SecurityConfig(
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .addFilterBefore(JwtAuthenticationFilter(jwtPlugin), BasicAuthenticationFilter::class.java)
             .addFilterBefore(jwtExceptionFilter, JwtAuthenticationFilter::class.java)
+            .exceptionHandling { it.authenticationEntryPoint(entryPoint) }
             .build()!!
     }
 

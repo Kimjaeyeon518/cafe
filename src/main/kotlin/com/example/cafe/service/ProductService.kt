@@ -1,14 +1,17 @@
 package com.example.cafe.service
 
 import com.example.cafe.domain.dto.OrderLineDto
+import com.example.cafe.domain.entity.Order
 import com.example.cafe.domain.entity.OrderLine
 import com.example.cafe.domain.entity.Product
 import com.example.cafe.domain.enums.Category
-import com.example.cafe.exception.BadRequestException
 import com.example.cafe.exception.NotFoundException
+import com.example.cafe.repository.OrderLineRepository
+import com.example.cafe.repository.OrderRepository
 import com.example.cafe.repository.ProductRepository
 import com.example.cafe.repository.UserRepository
 import com.example.cafe.web.request.BuyRequest
+import com.example.cafe.web.request.OrderLineRequest
 import com.example.cafe.web.request.ProductCreateRequest
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -21,9 +24,11 @@ class ProductService(
 ) {
 
     @Transactional
-    fun buy(userId: Long, request: BuyRequest) {
+    fun buy(userId: Long, request: BuyRequest): Order {
         val user = userRepository.findByIdWithPessimisticLock(userId)
             ?: throw NotFoundException("NOT FOUND USER")
+        user.deductPoint(request.totalPrice)
+
         val orderLines = request.orderLines
         val productIds = orderLines.map { it.productId }.toList()
         val products = productRepository.findByIdInWithPessimisticLock(productIds)
@@ -31,26 +36,9 @@ class ProductService(
             throw NotFoundException("유효하지 않은 상품이 존재합니다.")
         }
 
-        var totalPoint: Long = 0
-        var orderLineList = mutableListOf<OrderLineDto>()
-        for (product in products) {
-            for (orderLine in orderLines) {
-                if (product.productId != orderLine.productId) {
-                    continue
-                }
-
-                if (product.amount < orderLine.amount) {
-                    throw BadRequestException("${product.name} 상품의 재고가 부족합니다.")
-                }
-                product.purchase(orderLine.amount)
-                totalPoint += product.price * orderLine.amount
-                orderLineList.add(OrderLineDto(product, orderLine.amount))
-            }
-        }
-
-        user.deductPoint(totalPoint)
-        orderService.create(orderLineList, totalPoint)
+        return orderService.create(orderLines, products, request.totalPrice)
     }
+
 
     @Transactional
     fun create(request: ProductCreateRequest): Product {

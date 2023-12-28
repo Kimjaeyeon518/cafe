@@ -43,7 +43,10 @@ class ProductServiceTest(
 
     @Test
     fun concurrencyTest1() {
-        val request = BuyRequest(listOf(OrderLineRequest(1, 1)))
+        val request = BuyRequest(
+            listOf(OrderLineRequest(1, 1)),
+            1000
+        )
 
         val numberOfThreads = 4
         val executor = Executors.newFixedThreadPool(numberOfThreads)
@@ -70,8 +73,6 @@ class ProductServiceTest(
         val product = productRepository.findById(1).orElseThrow()
         val user1 = userRepository.findById(1).orElseThrow()
         val user2 = userRepository.findById(2).orElseThrow()
-        val order = orderRepository.findById(1).orElseThrow()
-        val orderLines = orderLineRepository.findAll()
 
         assertThat(user1.point).isEqualTo(998000)
         assertThat(user2.point).isEqualTo(998000)

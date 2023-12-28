@@ -6,10 +6,10 @@ import jakarta.persistence.*
 
 @Entity
 @Table(name = "product")
-class Product(name: String, category: Category, description: String, price: Long, amount: Long) {
+class Product(productId: Long? = null, name: String, category: Category, description: String, price: Long, amount: Long) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val productId: Long? = null   // 상품 PK
+    val productId: Long? = productId   // 상품 PK
 
     @Column(name = "name")
     var name = name   // 상품명
@@ -30,7 +30,7 @@ class Product(name: String, category: Category, description: String, price: Long
     @Column(name = "sale_count")
     var saleCount: Long = 0  // 판매 개수
 
-    fun purchase(amount: Long) {
+    fun purchased(amount: Long) {
         if (this.amount < amount) {
             throw BadRequestException("상품 재고가 부족합니다.")
         }

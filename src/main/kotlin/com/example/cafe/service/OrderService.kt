@@ -2,8 +2,11 @@ package com.example.cafe.service
 
 import com.example.cafe.domain.dto.OrderLineDto
 import com.example.cafe.domain.entity.Order
+import com.example.cafe.domain.entity.OrderLine
+import com.example.cafe.domain.entity.Product
 import com.example.cafe.repository.OrderLineRepository
 import com.example.cafe.repository.OrderRepository
+import com.example.cafe.web.request.OrderLineRequest
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
@@ -15,9 +18,9 @@ class OrderService(
 ) {
 
     @Transactional
-    fun create(orderLines: List<OrderLineDto>, totalPrice: Long): Order {
+    fun create(orderLines: List<OrderLineRequest>, products: List<Product>, totalPrice: Long): Order {
         val order = orderRepository.save(Order(totalPrice))
-        val orderLineList = orderLines.map { it.toEntity(order) }.toList()
+        var orderLineList = buildOrderLines(order, products, orderLines)
         orderLineRepository.saveAll(orderLineList)
         return order
     }
@@ -34,5 +37,22 @@ class OrderService(
         return saleCountMap.toList()
             .sortedByDescending { it.second }
             .take(3)
+    }
+
+    fun buildOrderLines(
+        order: Order,
+        products: List<Product>,
+        orderLines: List<OrderLineRequest>
+    ): MutableList<OrderLine> {
+        var orderLineList = mutableListOf<OrderLine>()
+        for (product in products) {
+            for (orderLine in orderLines) {
+                if (product.productId == orderLine.productId) {
+                    product.purchased(orderLine.amount)
+                    orderLineList.add(OrderLine(order, product, orderLine.amount))
+                }
+            }
+        }
+        return orderLineList
     }
 }

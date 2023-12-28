@@ -6,5 +6,5 @@ data class OrderLineRequest(
     @field:NotNull
     var productId: Long,
     @field:NotNull
-    var amount: Long,
+    var amount: Long
 )
