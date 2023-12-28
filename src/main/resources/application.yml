@@ -21,7 +21,7 @@ spring:
       hibernate:
         default_batch_fetch_size: 1000
         dialect: org.hibernate.dialect.H2Dialect
-        format_sql: false      # 쿼리 로그 포맷 (정렬)
+        format_sql: true      # 쿼리 로그 포맷 (정렬)
         show_sql: true        # 쿼리 로그 출력
 
 jwt:

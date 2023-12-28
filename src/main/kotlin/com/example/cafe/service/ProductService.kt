@@ -30,11 +30,8 @@ class ProductService(
         user.deductPoint(request.totalPrice)
 
         val orderLines = request.orderLines
-        val productIds = orderLines.map { it.productId }.toList()
+        val productIds = orderLines.map { it.productId }.distinct().toList()
         val products = productRepository.findByIdInWithPessimisticLock(productIds)
-        if (orderLines.size != products.size) {
-            throw NotFoundException("유효하지 않은 상품이 존재합니다.")
-        }
 
         return orderService.create(orderLines, products, request.totalPrice)
     }
@@ -58,8 +55,7 @@ class ProductService(
 
     fun findHit(): List<Product> {
         val pairs = orderService.findHit3Products()
-        return pairs.map {
-            productRepository.findById(it.first).orElseThrow()
-        }.toList()
+        val productIds = pairs.map { it.first }.toList()
+        return productRepository.findByProductIdIn(productIds)
     }
 }

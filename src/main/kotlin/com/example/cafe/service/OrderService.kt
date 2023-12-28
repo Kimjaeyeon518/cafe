@@ -1,9 +1,9 @@
 package com.example.cafe.service
 
-import com.example.cafe.domain.dto.OrderLineDto
 import com.example.cafe.domain.entity.Order
 import com.example.cafe.domain.entity.OrderLine
 import com.example.cafe.domain.entity.Product
+import com.example.cafe.exception.NotFoundException
 import com.example.cafe.repository.OrderLineRepository
 import com.example.cafe.repository.OrderRepository
 import com.example.cafe.web.request.OrderLineRequest
@@ -31,7 +31,7 @@ class OrderService(
         var saleCountMap = mutableMapOf<Long,Long>()
         orders.map {
             order -> order.orderLines.map {
-                saleCountMap.put(it.product.productId!!, saleCountMap.getOrDefault(it.product.productId, 0) + 1)
+                saleCountMap.put(it.product.productId!!, saleCountMap.getOrDefault(it.product.productId, 0) + it.amount)
             }
         }
         return saleCountMap.toList()
@@ -44,6 +44,9 @@ class OrderService(
         products: List<Product>,
         orderLines: List<OrderLineRequest>
     ): MutableList<OrderLine> {
+        if (orderLines.size != products.size) {
+            throw NotFoundException("유효하지 않은 상품이 존재합니다.")
+        }
         var orderLineList = mutableListOf<OrderLine>()
         for (product in products) {
             for (orderLine in orderLines) {
