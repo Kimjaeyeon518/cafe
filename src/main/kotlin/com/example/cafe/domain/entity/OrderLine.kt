@@ -1,6 +1,5 @@
 package com.example.cafe.domain.entity
 
-import com.example.cafe.domain.entity.Order
 import jakarta.persistence.*
 
 @Entity

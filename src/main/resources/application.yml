@@ -17,6 +17,8 @@ spring:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
       ddl-auto: create        # DB 초기화 전략 (none, create, create-drop, update, validate)
+    show-sql: true
+    format-sql: true
     properties:
       hibernate:
         default_batch_fetch_size: 1000

@@ -63,6 +63,17 @@ dependencies {
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     annotationProcessor("org.projectlombok:lombok")
 
+
+
+//    testImplementation("org.testcontainers:testcontainers:1.16.0") // TC 의존성
+    testImplementation("org.springframework.boot:spring-boot-testcontainers")
+    testImplementation("org.testcontainers:mysql:1.19.3")  // MySQL 컨테이너 사용
+    testImplementation("org.testcontainers:junit-jupiter:1.16.3")  // TC 의존성
+//    testImplementation("org.testcontainers:mysql:1.19.3")          // MySQL 컨테이너 사용
+//    testImplementation("org.testcontainers:jdbc:1.16.0")           // DB와의 JDBC connection
+    testImplementation("com.mysql:mysql-connector-j:8.2.0")
+
+    testImplementation("org.jeasy:easy-random-core:4.0.0")
     testImplementation("com.ninja-squad:springmockk:4.0.2")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1")
     testImplementation("org.springframework.boot:spring-boot-starter-test")

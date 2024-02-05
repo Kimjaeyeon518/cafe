@@ -1,4 +1,4 @@
-package com.example.board.exception
+package com.example.cafe.exception
 
 import com.example.cafe.web.response.ApiResponseCode
 

@@ -1,7 +1,7 @@
 package com.example.cafe.domain.entity
 
-import com.example.cafe.domain.enums.Category
 import com.example.cafe.exception.BadRequestException
+import com.example.cafe.domain.enums.Category
 import jakarta.persistence.*
 
 @Entity

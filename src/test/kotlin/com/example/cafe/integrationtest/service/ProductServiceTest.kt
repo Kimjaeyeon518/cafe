@@ -1,45 +1,24 @@
-package com.example.cafe.service
+package com.example.cafe.integrationtest.service
 
-import com.example.cafe.domain.enums.Category
-import com.example.cafe.repository.OrderLineRepository
-import com.example.cafe.repository.OrderRepository
+import com.example.cafe.integrationtest.IntegrationTest
 import com.example.cafe.repository.ProductRepository
 import com.example.cafe.repository.UserRepository
+import com.example.cafe.service.ProductService
 import com.example.cafe.web.request.BuyRequest
 import com.example.cafe.web.request.OrderLineRequest
-import com.example.cafe.web.request.ProductCreateRequest
-import com.example.cafe.web.request.SignUpRequest
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executors
 
-
-@SpringBootTest
-class ProductServiceTest(
+class ProductServiceTest: IntegrationTest() {
     @Autowired
-    val productService: ProductService,
+    lateinit var productService: ProductService
     @Autowired
-    val orderRepository: OrderRepository,
+    lateinit var productRepository: ProductRepository
     @Autowired
-    val orderLineRepository: OrderLineRepository,
-    @Autowired
-    val userService: UserService,
-    @Autowired
-    val productRepository: ProductRepository,
-    @Autowired
-    val userRepository: UserRepository
-) {
-
-    @BeforeEach
-    fun init() {
-        userService.signUp(SignUpRequest("jae518@naver.com", "wodus123", "재연", "USER", 1000000))
-        userService.signUp(SignUpRequest("jae5181@naver.com", "wodus123", "재연", "USER", 1000000))
-        productService.create(ProductCreateRequest("상품1", Category.CAFFEINE, "", 1000, 10000))
-    }
+    lateinit var userRepository: UserRepository
 
     @Test
     fun concurrencyTest1() {
@@ -78,4 +57,42 @@ class ProductServiceTest(
         assertThat(user2.point).isEqualTo(998000)
         assertThat(product.amount).isEqualTo(9996)
     }
+//
+//    @Test
+//    fun concurrencyTest2() {
+//        val request = BuyRequest(
+//            listOf(OrderLineRequest(1, 1)),
+//            1000
+//        )
+//
+//        val numberOfThreads = 4
+//        val executor = Executors.newFixedThreadPool(numberOfThreads)
+//        val latch = CountDownLatch(4)
+//
+//        executor.execute {
+//            productService.buy(1, request)
+//            latch.countDown()
+//        }
+//        executor.execute {
+//            productService.buy(2, request)
+//            latch.countDown()
+//        }
+//        executor.execute {
+//            productService.buy(1, request)
+//            latch.countDown()
+//        }
+//        executor.execute {
+//            productService.buy(2, request)
+//            latch.countDown()
+//        }
+//        latch.await()
+//
+//        val product = productRepository.findById(1).orElseThrow()
+//        val user1 = userRepository.findById(1).orElseThrow()
+//        val user2 = userRepository.findById(2).orElseThrow()
+//
+//        assertThat(user1.point).isEqualTo(998000)
+//        assertThat(user2.point).isEqualTo(998000)
+//        assertThat(product.amount).isEqualTo(9996)
+//    }
 }

@@ -1,16 +1,21 @@
 package com.example.cafe.domain.entity
 
-import com.example.cafe.exception.BadRequestException
 import com.example.cafe.domain.enums.MemberRole
+import com.example.cafe.exception.BadRequestException
 import jakarta.persistence.*
 
 @Entity
-@Table(name = "users")
-class User(username: String, password: String, name: String, role: MemberRole, point: Long = 0) {
+class Member(username: String, password: String, name: String, role: MemberRole, point: Long = 0) {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val userId: Long? = null   // 회원 PK
+    val memberId: Long? = null
+
+    @OneToMany(mappedBy = "member", cascade = [CascadeType.ALL], orphanRemoval = true)
+    var carts: MutableList<Cart> = ArrayList()
+
+    @OneToMany(mappedBy = "member", cascade = [CascadeType.ALL], orphanRemoval = true)
+    var favorites: MutableList<Favorite> = ArrayList()
 
     @Column(name = "username", unique = true)
     var username: String = username   // 회원 ID

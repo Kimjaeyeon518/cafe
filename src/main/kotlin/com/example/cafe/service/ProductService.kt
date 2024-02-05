@@ -1,17 +1,12 @@
 package com.example.cafe.service
 
-import com.example.cafe.domain.dto.OrderLineDto
 import com.example.cafe.domain.entity.Order
-import com.example.cafe.domain.entity.OrderLine
 import com.example.cafe.domain.entity.Product
 import com.example.cafe.domain.enums.Category
 import com.example.cafe.exception.NotFoundException
-import com.example.cafe.repository.OrderLineRepository
-import com.example.cafe.repository.OrderRepository
 import com.example.cafe.repository.ProductRepository
 import com.example.cafe.repository.UserRepository
 import com.example.cafe.web.request.BuyRequest
-import com.example.cafe.web.request.OrderLineRequest
 import com.example.cafe.web.request.ProductCreateRequest
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional

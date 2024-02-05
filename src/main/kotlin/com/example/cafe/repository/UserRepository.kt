@@ -6,12 +6,13 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Lock
 import org.springframework.data.jpa.repository.Query
 import org.springframework.stereotype.Repository
-import java.util.*
 
 @Repository
 interface UserRepository: JpaRepository<User, Long> {
     fun findByUsername(username: String): User?
-    fun existsByUsername(username: String): Boolean
+
+//    @Query("SELECT 1 * FROM users WHERE username = :username LIMIT 1", nativeQuery = true)
+//    fun findByUsername(username: String): User?
 
     @Lock(value = LockModeType.PESSIMISTIC_WRITE)
     @Query("select u from User u where u.userId = :id")

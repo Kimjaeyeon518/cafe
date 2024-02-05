@@ -4,7 +4,7 @@ import com.example.cafe.exception.BadRequestException
 import com.example.board.exception.DuplicateException
 import com.example.cafe.exception.NotFoundException
 import com.example.cafe.domain.entity.User
-import com.example.cafe.domain.enums.UserRole
+import com.example.cafe.domain.enums.MemberRole
 import com.example.cafe.exception.InvalidCredentialException
 import com.example.cafe.plugin.JwtPlugin
 import com.example.cafe.repository.UserRepository
@@ -32,8 +32,8 @@ class UserService(
     }
 
     fun signUp(request: SignUpRequest): User {
-        val result = userRepository.existsByUsername(request.username)
-        if (result) {
+        val result = userRepository.findByUsername(request.username)
+        if (result != null) {
             throw DuplicateException("중복된 ID 입니다.")
         }
         val user = User(
@@ -41,8 +41,8 @@ class UserService(
             password = passwordEncoder.encode(request.password),
             name = request.name,
             role = when (request.role) {
-                "USER" -> UserRole.ROLE_USER
-                "ADMIN" -> UserRole.ROLE_ADMIN
+                "USER" -> MemberRole.CUSTOMER
+                "ADMIN" -> MemberRole.ADMIN
                 else -> throw BadRequestException("Role이 유효하지 않습니다.")
             },
             point = request.point
